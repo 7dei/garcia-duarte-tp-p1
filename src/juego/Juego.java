@@ -1,6 +1,5 @@
 package juego;
 
-
 import java.awt.Color;
 
 import entorno.Entorno;
@@ -9,6 +8,8 @@ import entorno.InterfaceJuego;
 public class Juego extends InterfaceJuego {
 	// El objeto Entorno que controla el tiempo y otros
 	private Entorno entorno;
+	//meto en private las clases que voy a utilizar
+	private Pantalla pantalla;
 	
 	// Variables y métodos propios de cada grupo
 	// ...
@@ -19,6 +20,11 @@ public class Juego extends InterfaceJuego {
 		
 		// Inicializar lo que haga falta para el juego
 		// ...
+		
+		//asigno la pantalla a el juego
+		this.pantalla = new Pantalla();
+		
+		
 
 		// Inicia el juego!
 		this.entorno.iniciar();
@@ -34,6 +40,8 @@ public class Juego extends InterfaceJuego {
 	{
 		// Procesamiento de un instante de tiempo
 		// ...
+		pantalla.dibujarZonas(entorno);
+		
 		
 	}
 	
