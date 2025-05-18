@@ -12,13 +12,18 @@ public class Juego extends InterfaceJuego {
 	private Pantalla pantalla;
 	private Mago mago;
 	private Piedra piedra;
+	private String[] opciones = {"Jugar", "Salir"};
+    private int opcionSeleccionada = 0;
+    private enum estadoJuego{Menu_Principal, En_Juego}; //Creamos un private enum, que toma 2 posibles valores, Menu_Principal, En_Juego. Que luego sera utilizado para saber en que estado se encuentra el jugador.
+    private estadoJuego estado = estadoJuego.Menu_Principal;
 	
 	// Variables y métodos propios de cada grupo
 	// ...
 	
 	public Juego() {
-		// Inicializa el objeto entorno y nombres de los grupos 
-		this.entorno = new Entorno(this, "Titulo de TP - Grupo N10 - Garcia - Duarte - Apellido3", 800, 600);
+		// Inicializa el objeto entorno y nombres de los grupos
+		this.entorno = new Entorno(this, "Gondolf un nuevo Mago - Grupo N10 - Garcia - Duarte - Apellido3", 800, 600);
+		
 		
 		// Inicializar lo que haga falta para el juego
 		// ...
@@ -40,12 +45,44 @@ public class Juego extends InterfaceJuego {
 	 * (ver el enunciado del TP para mayor detalle).
 	 */
 	public void tick()
-	{
-		// Procesamiento de un instante de tiempo
-		// ...
-		pantalla.dibujarZonas(entorno);
+	{ if (estado == estadoJuego.Menu_Principal) { //Verificamos si el estado del juego esta en menu. Si esta en el Menu se ejecutara las lineas de codigo del menu. 
+		//Fondo negro
+		entorno.colorFondo(Color.BLACK);
 		
-		mago.dibujarMago(entorno);
+		// Fuente blanca y grande
+		entorno.cambiarFont("Arial" , 30, Color.WHITE);
+		//Titulo
+		entorno.escribirTexto("Menu principal",200,100);
+		//Opciones
+
+		for (int i=0; i < opciones.length; i++) {
+			Color color=(i==opcionSeleccionada) ? Color.YELLOW : Color.WHITE;
+			entorno.cambiarFont("Arial", 25, color);
+			entorno.escribirTexto(opciones[i],250, 180 + i* 40);
+		}
+		if (entorno.sePresiono(entorno.TECLA_ABAJO)) {
+			opcionSeleccionada= (opcionSeleccionada + 1) % opciones.length;
+		}
+		else if
+			(entorno.sePresiono(entorno.TECLA_ARRIBA)) {
+				opcionSeleccionada = (opcionSeleccionada - 1 + opciones.length) % opciones.length;
+        }
+			
+		if (entorno.sePresiono(entorno.TECLA_ENTER)) {
+			if (opcionSeleccionada == 0) {
+				System.out.println("Elegiste Jugar"); //Si el jugador elige la opcion jugar, se lo mandara a otro menu donde alli podra jugar al juego.
+				estado = estadoJuego.En_Juego;
+			}
+			else if (opcionSeleccionada == 1) {
+				System.out.println("Elegiste Salir"); // si el jugador elige la opcion salir el programa se cerrara automaticamente
+				System.exit(0);
+			}
+		}
+	}
+		else if (estado == estadoJuego.En_Juego) { //Una vez que confirmamos que el estado de juego sea En_Juego, el jugador podra jugar al videojuego.
+			pantalla.dibujarZonas(entorno);
+		
+			mago.dibujarMago(entorno);
 //se agregaron funciones que detecten si la tecla presionada es correcta se dirigue para la direccion indicada.		
 		if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
 			mago.moverIzquierda();
@@ -59,11 +96,14 @@ public class Juego extends InterfaceJuego {
 		if (entorno.estaPresionada(entorno.TECLA_ABAJO)) {
 			mago.moverAbajo();
 		}
+		if (entorno.estaPresionada(entorno.TECLA_ESCAPE)) { 
+			System.exit(0); // Si el jugador toca el escape mientras esta jugando, se cerrara el programa
+		}
 		
 		piedra.dibujarPiedra(entorno);
 		
 	}
-	
+	}
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args)
