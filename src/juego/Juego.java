@@ -10,6 +10,8 @@ public class Juego extends InterfaceJuego {
 	private Entorno entorno;
 	//meto en private las clases que voy a utilizar
 	private Pantalla pantalla;
+	private Mago mago;
+	private Piedra piedra;
 	
 	// Variables y métodos propios de cada grupo
 	// ...
@@ -23,7 +25,8 @@ public class Juego extends InterfaceJuego {
 		
 		//asigno la pantalla a el juego
 		this.pantalla = new Pantalla();
-		
+		this.mago = new Mago(300, 300, 30);
+		this.piedra = new Piedra(300, 200, 30);
 		
 
 		// Inicia el juego!
@@ -42,6 +45,22 @@ public class Juego extends InterfaceJuego {
 		// ...
 		pantalla.dibujarZonas(entorno);
 		
+		mago.dibujarMago(entorno);
+//se agregaron funciones que detecten si la tecla presionada es correcta se dirigue para la direccion indicada.		
+		if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
+			mago.moverIzquierda();
+		}
+		if (entorno.estaPresionada(entorno.TECLA_DERECHA)) {
+			mago.moverDerecha();
+		}
+		if (entorno.estaPresionada(entorno.TECLA_ARRIBA)) {
+			mago.moverArriba();
+		}
+		if (entorno.estaPresionada(entorno.TECLA_ABAJO)) {
+			mago.moverAbajo();
+		}
+		
+		piedra.dibujarPiedra(entorno);
 		
 	}
 	
