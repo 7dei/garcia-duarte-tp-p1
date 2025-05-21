@@ -11,9 +11,9 @@ public class Pantalla {
 	private double x;
 	private double y;
 	//los anchos estan asignado al reves para que no generen error
-	private int anchoJuego = 200;
-	private int altoJuego = 600;
-	private int anchoPoderes = 600;
+	private double anchoJuego = 600;
+	private double altoJuego = 600;
+	private double anchoPoderes = 200;
 	private Image fondoJuego;
 	private Image fondoPoderes;
 	
@@ -21,15 +21,20 @@ public class Pantalla {
 	public Pantalla() {
 		this.fondoJuego = Herramientas.cargarImagen("bloque.png");
 		this.fondoPoderes = Herramientas.cargarImagen("bloquem.png");
-		this.x = x;
-		this.y = y;
 	}
 	
 	
-	public void dibujarZonas (Entorno entorno) {
-		entorno.dibujarImagen(fondoPoderes, anchoPoderes, altoJuego/2, 0);
-		entorno.dibujarImagen(fondoJuego, anchoJuego, altoJuego/2, 0 );
+	public void dibujarPantalla(Entorno entorno) {
+	    // Zona jugable (3/4 izq) → centro en 600 / 2 = 300
+	    entorno.dibujarImagen(fondoJuego, anchoJuego / 2, altoJuego / 2, 0);
 	}
+
+	public void dibujarPoderes(Entorno entorno) {
+	    // Zona de menú (1/4 der) → centro en 600 + (200 / 2) = 700
+	    entorno.dibujarImagen(fondoPoderes, anchoJuego + (anchoPoderes*2), altoJuego / 2, 0);
+	}
+
+	
 	
 	public double getX() {
 		return x;
@@ -39,15 +44,15 @@ public class Pantalla {
 		return y;
 	}
 	
-	public int getAnchoJuego() {
+	public double getAnchoJuego() {
 		return anchoJuego;
 	}
 	
-	public int getAltoJuego() {
+	public double getAltoJuego() {
 		return altoJuego;	
 	}
 	
-	public int getAnchoPoderes() {
+	public double getAnchoPoderes() {
 		return anchoPoderes;
 	}
 	

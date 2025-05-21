@@ -1,6 +1,8 @@
 package juego;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.util.Random;
 
 import entorno.Entorno;
 import entorno.InterfaceJuego;
@@ -31,14 +33,21 @@ public class Juego extends InterfaceJuego {
 		// ...
 		
 		//asigno la pantalla a el juego
-		this.pantalla = new Pantalla();
 		this.mago = new Mago(300, 300, 30);
 		
 		this.murcielagos = new Murcielago[10];
-		for (int i = 0; i<murcielagos.length; i++) {
-			double posX = Math.random() * 600;
-			double posY = Math.random() * 600;
-			murcielagos[i] = new Murcielago(posX, posY, 10);
+		
+		Point[] zonasSpawn = {
+			    new Point((int) Math.random() * -50, -50),
+			    new Point((int) (Math.random() * 600 + 50), -50),
+			    new Point((int) Math.random() * -50, 600 + 50),
+			    new Point((int) Math.random() * 600 + 50, 600 + 50)
+			    
+			};
+			
+			for (int i = 0; i<murcielagos.length; i++) {
+				Point spawn = zonasSpawn[new Random().nextInt(zonasSpawn.length)];
+				murcielagos[i] = new Murcielago(spawn.x , spawn.y, 10);
  		}
 		
 		//arreglo de piedras donde se recorre cada piedra y se ubica en cierta posicion de x o y, segundo corresponda.
@@ -48,8 +57,8 @@ public class Juego extends InterfaceJuego {
 			double [] posY = {100, 500, 300, 300, 500, 100};
 			piedras[i] = new Piedra(posX[i], posY[i], 60);
 		}
-		
-
+		this.pantalla = new Pantalla();	
+ 
 		// Inicia el juego!
 		this.entorno.iniciar();
 	}
@@ -66,15 +75,15 @@ public class Juego extends InterfaceJuego {
 		entorno.colorFondo(Color.BLACK);
 		
 		// Fuente blanca y grande
-		entorno.cambiarFont("Arial" , 30, Color.WHITE);
+		entorno.cambiarFont("Arial bold" , 60, Color.WHITE);
 		//Titulo
-		entorno.escribirTexto("Menu principal",200,100);
+		entorno.escribirTexto("Menu principal",195,140);
 		//Opciones
 
 		for (int i=0; i < opciones.length; i++) {
 			Color color=(i==opcionSeleccionada) ? Color.YELLOW : Color.WHITE;
-			entorno.cambiarFont("Arial", 25, color);
-			entorno.escribirTexto(opciones[i],250, 180 + i* 40);
+			entorno.cambiarFont("Arial", 35, color);
+			entorno.escribirTexto(opciones[i],360, 300 + i* 80);
 		}
 		if (entorno.sePresiono(entorno.TECLA_ABAJO)) {
 			opcionSeleccionada= (opcionSeleccionada + 1) % opciones.length;
@@ -96,37 +105,42 @@ public class Juego extends InterfaceJuego {
 		}
 	}
 		else if (estado == estadoJuego.En_Juego) { //Una vez que confirmamos que el estado de juego sea En_Juego, el jugador podra jugar al videojuego.
-			pantalla.dibujarZonas(entorno);
-		
+			pantalla.dibujarPantalla(entorno);
+			
 			mago.dibujarMago(entorno);
+			//en la lista de murcielagos, pasa por cada murcielago m dibujando e indicandole como seguir al mago.
+			for (Murcielago m : murcielagos) {
+				m.dibujarMurcielago(entorno);
+				m.seguir(mago);
+			}
+			pantalla.dibujarPoderes(entorno);	
+			
 //se agregaron funciones que detecten si la tecla presionada es correcta se dirigue para la direccion indicada.		
 		if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
-			mago.moverIzquierda();
+			mago.moverIzquierda(piedras);
 		}
 		if (entorno.estaPresionada(entorno.TECLA_DERECHA)) {
-			mago.moverDerecha();
+			mago.moverDerecha(piedras);
 		}
 		if (entorno.estaPresionada(entorno.TECLA_ARRIBA)) {
-			mago.moverArriba();
+			mago.moverArriba(piedras);
 		}
 		if (entorno.estaPresionada(entorno.TECLA_ABAJO)) {
-			mago.moverAbajo();
+			mago.moverAbajo(piedras);
 		}
 		if (entorno.estaPresionada(entorno.TECLA_ESCAPE)) { 
 			System.exit(0); // Si el jugador toca el escape mientras esta jugando, se cerrara el programa
 		}
-		
+		//spawnea las piedras en el mapa a traves de recorrer el arreglo de piedras
 		for (int i = 0; i < piedras.length; i++) {
 			piedras[i].dibujarPiedra(entorno);
+			
 		}
-		for (Murcielago m : murcielagos) {
-			m.dibujarMurcielago(entorno);
-			m.seguir(mago);
 		}
 		
 		
 	}
-	}
+
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args)

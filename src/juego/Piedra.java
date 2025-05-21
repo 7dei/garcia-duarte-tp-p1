@@ -25,4 +25,17 @@ public class Piedra {
 	public void dibujarPiedra(Entorno e) {
 		e.dibujarCirculo(x, y, diametro, color);
 	}
+	
+	public double getX() {
+		return this.x;
+	}
+	
+	public double getY() {
+		return this.y;
+	}
+
+	public double getDiam() {
+		// TODO Auto-generated method stub
+		return diametro;
+	}
 }

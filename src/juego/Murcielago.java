@@ -16,7 +16,7 @@ public class Murcielago {
 		this.x = x;
 		this.diam = diam;
 		this.color = Color.RED;
-		this.velocidad = 2;
+		this.velocidad = 1.5;
 	}
 	
 	public void dibujarMurcielago(Entorno e) {
