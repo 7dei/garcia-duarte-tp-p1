@@ -17,6 +17,7 @@ public class Juego extends InterfaceJuego {
     private enum estadoJuego{Menu_Principal, En_Juego}; //Creamos un private enum, que toma 2 posibles valores, Menu_Principal, En_Juego. Que luego sera utilizado para saber en que estado se encuentra el jugador.
     private estadoJuego estado = estadoJuego.Menu_Principal;
 	private Piedra [] piedras;
+	private Murcielago [] murcielagos;
 	
 	// Variables y métodos propios de cada grupo
 	// ...
@@ -32,6 +33,13 @@ public class Juego extends InterfaceJuego {
 		//asigno la pantalla a el juego
 		this.pantalla = new Pantalla();
 		this.mago = new Mago(300, 300, 30);
+		
+		this.murcielagos = new Murcielago[10];
+		for (int i = 0; i<murcielagos.length; i++) {
+			double posX = Math.random() * 600;
+			double posY = Math.random() * 600;
+			murcielagos[i] = new Murcielago(posX, posY, 10);
+ 		}
 		
 		//arreglo de piedras donde se recorre cada piedra y se ubica en cierta posicion de x o y, segundo corresponda.
 		this.piedras = new Piedra[6];
@@ -111,6 +119,11 @@ public class Juego extends InterfaceJuego {
 		for (int i = 0; i < piedras.length; i++) {
 			piedras[i].dibujarPiedra(entorno);
 		}
+		for (Murcielago m : murcielagos) {
+			m.dibujarMurcielago(entorno);
+			m.seguir(mago);
+		}
+		
 		
 	}
 	}

@@ -21,7 +21,7 @@ public class Mago {
 		this.x = x;
 		this.diam = diam;
 		this.color = Color.BLUE;
-		this.velocidad = 5;
+		this.velocidad = 3;
 //		this.imagenMago = Herramientas.cargarImagen("2.jpg");
 	}
 	
@@ -56,6 +56,13 @@ public class Mago {
 		e.dibujarCirculo(x, y, diam, color);
 		}
 		
+	
+	public double getX() {
+		return this.x;
 	}
-
+	
+	public double getY() {
+		return this.y;
+	}
+}
 
