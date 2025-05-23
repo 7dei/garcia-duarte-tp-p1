@@ -13,138 +13,124 @@ public class Juego extends InterfaceJuego {
 	//meto en private las clases que voy a utilizar
 	private Pantalla pantalla;
 	private Mago mago;
-	private Piedra piedra;
+	private Piedra[] piedras;
+	private Murcielago[] murcielagos;
+	private int murcielagosCreados = 0;
+	
 	private String[] opciones = {"Jugar", "Salir"};
     private int opcionSeleccionada = 0;
-    private enum estadoJuego{Menu_Principal, En_Juego}; //Creamos un private enum, que toma 2 posibles valores, Menu_Principal, En_Juego. Que luego sera utilizado para saber en que estado se encuentra el jugador.
+    private enum estadoJuego {Menu_Principal, En_Juego};
     private estadoJuego estado = estadoJuego.Menu_Principal;
-	private Piedra [] piedras;
-	private Murcielago [] murcielagos;
-	
-	// Variables y métodos propios de cada grupo
-	// ...
-	
+
+
 	public Juego() {
-		// Inicializa el objeto entorno y nombres de los grupos
 		this.entorno = new Entorno(this, "Gondolf un nuevo Mago - Grupo N10 - Garcia - Duarte - Apellido3", 800, 600);
 		
-		
-		// Inicializar lo que haga falta para el juego
-		// ...
-		
-		//asigno la pantalla a el juego
 		this.mago = new Mago(300, 300, 30);
-		
-		this.murcielagos = new Murcielago[10];
-		
-		Point[] zonasSpawn = {
-			    new Point((int) Math.random() * -50, -50),
-			    new Point((int) (Math.random() * 600 + 50), -50),
-			    new Point((int) Math.random() * -50, 600 + 50),
-			    new Point((int) Math.random() * 600 + 50, 600 + 50)
-			    
-			};
-			
-			for (int i = 0; i<murcielagos.length; i++) {
-				Point spawn = zonasSpawn[new Random().nextInt(zonasSpawn.length)];
-				murcielagos[i] = new Murcielago(spawn.x , spawn.y, 10);
- 		}
-		
-		//arreglo de piedras donde se recorre cada piedra y se ubica en cierta posicion de x o y, segundo corresponda.
+		this.murcielagos = new Murcielago[50];
+
+		// arreglo de piedras
 		this.piedras = new Piedra[6];
 		for (int i = 0; i < piedras.length; i++) {
-			double [] posX = {150, 150, 200, 400, 450, 450};
-			double [] posY = {100, 500, 300, 300, 500, 100};
+			double[] posX = {150, 150, 200, 400, 450, 450};
+			double[] posY = {100, 500, 300, 300, 500, 100};
 			piedras[i] = new Piedra(posX[i], posY[i], 60);
 		}
 		this.pantalla = new Pantalla();	
- 
-		// Inicia el juego!
+
 		this.entorno.iniciar();
 	}
+//este metodo se encarga de crear de a 10 murcielagos nuevos y agregarlos al arreglo murcielagos,
+//como su limite es 50, si el contador de murcielagos creados llega a 50 termina (Ya que el largo de murcielagos es 50)
+	public void crearMurcielagos() {
+		Point[] zonasSpawn = new Point[] {
+			new Point(-50, 0),  // izquierda arriba
+			new Point(-50, 400), // izquierda abajo
+			new Point(150, -50), //arriba izquierda
+			new Point(450, -50), //arriba medio
+			new Point(700, -50), // arriba derecha
+			new Point(150, 650), // abajo izquierda
+			new Point(450, 650), // abajo medio
+			new Point(700, 650), // abajo derecha
+			new Point(750, 200), //derecha arriba
+			new Point(750, 550) //derecha abajo
+		};
 
-	/**
-	 * Durante el juego, el método tick() será ejecutado en cada instante y 
-	 * por lo tanto es el método más importante de esta clase. Aquí se debe 
-	 * actualizar el estado interno del juego para simular el paso del tiempo 
-	 * (ver el enunciado del TP para mayor detalle).
-	 */
-	public void tick()
-	{ if (estado == estadoJuego.Menu_Principal) { //Verificamos si el estado del juego esta en menu. Si esta en el Menu se ejecutara las lineas de codigo del menu. 
-		//Fondo negro
-		entorno.colorFondo(Color.BLACK);
-		
-		// Fuente blanca y grande
-		entorno.cambiarFont("Arial bold" , 60, Color.WHITE);
-		//Titulo
-		entorno.escribirTexto("Menu principal",195,140);
-		//Opciones
+		// crear hasta 10 murcielagos mas sin superar 50
+		for (int i = 0; i < 10 && murcielagosCreados < murcielagos.length; i++) {
+			// utilizo modulo en el indice para que recorra cada punto segun la cantidad de murcielagos creados.
+			// por ejemplo [2 % 10 = 2], lo que me generaria el segundo punto, hasta llegar a 10.
+			Point spawn = zonasSpawn[murcielagosCreados % zonasSpawn.length];
+			murcielagos[murcielagosCreados] = new Murcielago(spawn.x, spawn.y, 10);
+			murcielagosCreados++;
+		}
+	}
 
-		for (int i=0; i < opciones.length; i++) {
-			Color color=(i==opcionSeleccionada) ? Color.YELLOW : Color.WHITE;
-			entorno.cambiarFont("Arial", 35, color);
-			entorno.escribirTexto(opciones[i],360, 300 + i* 80);
-		}
-		if (entorno.sePresiono(entorno.TECLA_ABAJO)) {
-			opcionSeleccionada= (opcionSeleccionada + 1) % opciones.length;
-		}
-		else if
-			(entorno.sePresiono(entorno.TECLA_ARRIBA)) {
-				opcionSeleccionada = (opcionSeleccionada - 1 + opciones.length) % opciones.length;
-        }
+	public void tick() {
+		if (estado == estadoJuego.Menu_Principal) {
+			entorno.colorFondo(Color.BLACK);
+			entorno.cambiarFont("Arial bold", 60, Color.WHITE);
+			entorno.escribirTexto("Menu principal", 195, 140);
 			
-		if (entorno.sePresiono(entorno.TECLA_ENTER)) {
-			if (opcionSeleccionada == 0) {
-				System.out.println("Elegiste Jugar"); //Si el jugador elige la opcion jugar, se lo mandara a otro menu donde alli podra jugar al juego.
-				estado = estadoJuego.En_Juego;
+			for (int i = 0; i < opciones.length; i++) {
+				Color color = (i == opcionSeleccionada) ? Color.YELLOW : Color.WHITE;
+				entorno.cambiarFont("Arial", 35, color);
+				entorno.escribirTexto(opciones[i], 360, 300 + i * 80);
 			}
-			else if (opcionSeleccionada == 1) {
-				System.out.println("Elegiste Salir"); // si el jugador elige la opcion salir el programa se cerrara automaticamente
+
+			if (entorno.sePresiono(entorno.TECLA_ABAJO)) {
+				opcionSeleccionada = (opcionSeleccionada + 1) % opciones.length;
+			} else if (entorno.sePresiono(entorno.TECLA_ARRIBA)) {
+				opcionSeleccionada = (opcionSeleccionada - 1 + opciones.length) % opciones.length;
+			}
+
+			if (entorno.sePresiono(entorno.TECLA_ENTER)) {
+				if (opcionSeleccionada == 0) {
+					System.out.println("Elegiste Jugar");
+					estado = estadoJuego.En_Juego;
+					crearMurcielagos(); // 🔁 Podés llamarlo al iniciar
+				} else if (opcionSeleccionada == 1) {
+					System.out.println("Elegiste Salir");
+					System.exit(0);
+				}
+			}
+
+		} else if (estado == estadoJuego.En_Juego) {
+			pantalla.dibujarPantalla(entorno);
+			mago.dibujarMago(entorno);
+
+			for (Murcielago m : murcielagos) {
+				if (m != null) {
+					m.dibujarMurcielago(entorno);
+					m.seguir(mago);
+				}
+			}
+
+			pantalla.dibujarPoderes(entorno);
+
+			if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
+				mago.moverIzquierda(piedras);
+			}
+			if (entorno.estaPresionada(entorno.TECLA_DERECHA)) {
+				mago.moverDerecha(piedras);
+			}
+			if (entorno.estaPresionada(entorno.TECLA_ARRIBA)) {
+				mago.moverArriba(piedras);
+			}
+			if (entorno.estaPresionada(entorno.TECLA_ABAJO)) {
+				mago.moverAbajo(piedras);
+			}
+			if (entorno.estaPresionada(entorno.TECLA_ESCAPE)) {
 				System.exit(0);
 			}
-		}
-	}
-		else if (estado == estadoJuego.En_Juego) { //Una vez que confirmamos que el estado de juego sea En_Juego, el jugador podra jugar al videojuego.
-			pantalla.dibujarPantalla(entorno);
-			
-			mago.dibujarMago(entorno);
-			//en la lista de murcielagos, pasa por cada murcielago m dibujando e indicandole como seguir al mago.
-			for (Murcielago m : murcielagos) {
-				m.dibujarMurcielago(entorno);
-				m.seguir(mago);
+
+			for (int i = 0; i < piedras.length; i++) {
+				piedras[i].dibujarPiedra(entorno);
 			}
-			pantalla.dibujarPoderes(entorno);	
-			
-//se agregaron funciones que detecten si la tecla presionada es correcta se dirigue para la direccion indicada.		
-		if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
-			mago.moverIzquierda(piedras);
 		}
-		if (entorno.estaPresionada(entorno.TECLA_DERECHA)) {
-			mago.moverDerecha(piedras);
-		}
-		if (entorno.estaPresionada(entorno.TECLA_ARRIBA)) {
-			mago.moverArriba(piedras);
-		}
-		if (entorno.estaPresionada(entorno.TECLA_ABAJO)) {
-			mago.moverAbajo(piedras);
-		}
-		if (entorno.estaPresionada(entorno.TECLA_ESCAPE)) { 
-			System.exit(0); // Si el jugador toca el escape mientras esta jugando, se cerrara el programa
-		}
-		//spawnea las piedras en el mapa a traves de recorrer el arreglo de piedras
-		for (int i = 0; i < piedras.length; i++) {
-			piedras[i].dibujarPiedra(entorno);
-			
-		}
-		}
-		
-		
 	}
 
-
-	@SuppressWarnings("unused")
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		Juego juego = new Juego();
 	}
 }

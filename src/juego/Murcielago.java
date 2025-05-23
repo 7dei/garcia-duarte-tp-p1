@@ -9,8 +9,9 @@ public class Murcielago {
 	private double diam;
 	private double velocidad;
 	private Color color;
-
-
+	
+	
+	
 	public Murcielago(double x, double y, int diam ) {
 		this.y = y;
 		this.x = x;
