@@ -36,6 +36,13 @@ public class Murcielago {
 	        this.y += (posY / distancia) * velocidad;
 	    }
 	}
+	
+	public double getX() {
+		return x;
+	}
+	public double getY() {
+		return y;
+	}
 
 }
 

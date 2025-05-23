@@ -7,6 +7,8 @@ import java.util.Random;
 import entorno.Entorno;
 import entorno.InterfaceJuego;
 
+import java.util.ArrayList; //Agregamos lista de arreglos para los hechizos
+
 public class Juego extends InterfaceJuego {
 	// El objeto Entorno que controla el tiempo y otros
 	private Entorno entorno;
@@ -19,7 +21,9 @@ public class Juego extends InterfaceJuego {
     private enum estadoJuego{Menu_Principal, En_Juego}; //Creamos un private enum, que toma 2 posibles valores, Menu_Principal, En_Juego. Que luego sera utilizado para saber en que estado se encuentra el jugador.
     private estadoJuego estado = estadoJuego.Menu_Principal;
 	private Piedra [] piedras;
-	private Murcielago [] murcielagos;
+	private ArrayList <Murcielago> murcielagos = new ArrayList<>(); //creamos una lista dinamica la cual es utilizada para contar la cantidad de murcielagos que hay en el arreglo
+	private ArrayList <Hechizos> hechizos= new ArrayList<>(); //creamos una lista dinamica la cual es usada para contar todos los hechizos que fueron utilizados
+	private Boton botonDisparo;
 	
 	// Variables y métodos propios de cada grupo
 	// ...
@@ -35,8 +39,6 @@ public class Juego extends InterfaceJuego {
 		//asigno la pantalla a el juego
 		this.mago = new Mago(300, 300, 30);
 		
-		this.murcielagos = new Murcielago[10];
-		
 		Point[] zonasSpawn = {
 			    new Point((int) Math.random() * -50, -50),
 			    new Point((int) (Math.random() * 600 + 50), -50),
@@ -45,9 +47,10 @@ public class Juego extends InterfaceJuego {
 			    
 			};
 			
-			for (int i = 0; i<murcielagos.length; i++) {
-				Point spawn = zonasSpawn[new Random().nextInt(zonasSpawn.length)];
-				murcielagos[i] = new Murcielago(spawn.x , spawn.y, 10);
+			for (int l = 0; l < 10 ;l++) {
+				Point spawn= zonasSpawn [new Random().nextInt(zonasSpawn.length)];
+				murcielagos.add(new Murcielago(spawn.x,spawn.y,10));
+				
  		}
 		
 		//arreglo de piedras donde se recorre cada piedra y se ubica en cierta posicion de x o y, segundo corresponda.
@@ -104,43 +107,62 @@ public class Juego extends InterfaceJuego {
 			}
 		}
 	}
-		else if (estado == estadoJuego.En_Juego) { //Una vez que confirmamos que el estado de juego sea En_Juego, el jugador podra jugar al videojuego.
-			pantalla.dibujarPantalla(entorno);
-			
-			mago.dibujarMago(entorno);
-			//en la lista de murcielagos, pasa por cada murcielago m dibujando e indicandole como seguir al mago.
-			for (Murcielago m : murcielagos) {
-				m.dibujarMurcielago(entorno);
-				m.seguir(mago);
-			}
-			pantalla.dibujarPoderes(entorno);	
-			
-//se agregaron funciones que detecten si la tecla presionada es correcta se dirigue para la direccion indicada.		
-		if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
-			mago.moverIzquierda(piedras);
-		}
-		if (entorno.estaPresionada(entorno.TECLA_DERECHA)) {
-			mago.moverDerecha(piedras);
-		}
-		if (entorno.estaPresionada(entorno.TECLA_ARRIBA)) {
-			mago.moverArriba(piedras);
-		}
-		if (entorno.estaPresionada(entorno.TECLA_ABAJO)) {
-			mago.moverAbajo(piedras);
-		}
-		if (entorno.estaPresionada(entorno.TECLA_ESCAPE)) { 
-			System.exit(0); // Si el jugador toca el escape mientras esta jugando, se cerrara el programa
-		}
-		//spawnea las piedras en el mapa a traves de recorrer el arreglo de piedras
-		for (int i = 0; i < piedras.length; i++) {
-			piedras[i].dibujarPiedra(entorno);
-			
-		}
-		}
-		
-		
-	}
+	else if (estado == estadoJuego.En_Juego) {
+		entorno.dibujarRectangulo(700, 300, 200, 600, 0, Color.MAGENTA);
+	    pantalla.dibujarPantalla(entorno);
+	    mago.dibujarMago(entorno);
 
+	    // Dibujar los murciélagos
+	    for (Murcielago m : murcielagos) {
+	        m.dibujarMurcielago(entorno);
+	        m.seguir(mago);
+	    }
+
+	    // Dibujar hechizos
+	    if (entorno.mousePresente() && entorno.sePresionoBoton(1)) {
+	        double dx = entorno.mouseX() - mago.getX();
+	        double dy = entorno.mouseY() - mago.getY();
+	        double angulo = Math.atan2(dy, dx);
+	        hechizos.add(new Hechizos(mago.getX(), mago.getY(), angulo));
+	    }
+
+	    for (int k = 0; k < hechizos.size(); k++) {
+	        Hechizos h = hechizos.get(k);
+	        h.mover();
+	        h.dibujar(entorno);
+	        for (int j = 0; j < murcielagos.size(); j++) {
+	            Murcielago m = murcielagos.get(j);
+	            if (h.colisionaCon(m)) {
+	                murcielagos.remove(j);
+	                hechizos.remove(k);
+	                k--;
+	                break;
+	            }
+	        }
+	    }
+
+	    for (int i = 0; i < piedras.length; i++) {
+	        piedras[i].dibujarPiedra(entorno);
+	    }
+
+	    // Movimiento del mago
+	    if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA) || entorno.estaPresionada('a')) { // cuando presionamos la flecha izquierda o la letra a, el mago se mueve para la izquierda
+	        mago.moverIzquierda(piedras);
+	    }
+	    if (entorno.estaPresionada(entorno.TECLA_DERECHA) || entorno.estaPresionada('d')) { // cuando presionamos la flecha derecha o la letra d, el mago se mueve para la derecha
+	        mago.moverDerecha(piedras);
+	    }
+	    if (entorno.estaPresionada(entorno.TECLA_ARRIBA) || entorno.estaPresionada('w')) { // cuando presionamos la flecha arriba o la letra w, el mago se mueve para arriba
+	        mago.moverArriba(piedras);
+	    }
+	    if (entorno.estaPresionada(entorno.TECLA_ABAJO) || entorno.estaPresionada('s')) { // cuando presionamos la flecha abajo o la letra s, el mago se mueve para abajo
+	        mago.moverAbajo(piedras);
+	    }
+	    if (entorno.estaPresionada(entorno.TECLA_ESCAPE)) { // cuando presionamos tecla escape, salimos del juego y se cierra el programa
+	        System.exit(0);
+	    }
+	}
+	}
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args)
