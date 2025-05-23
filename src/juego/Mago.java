@@ -12,6 +12,7 @@ public class Mago {
 	private double diam;
 	private int velocidad;
 	private Color color;
+	private int vida;
 //	private Image imagenMago;
 	
 	
@@ -22,6 +23,7 @@ public class Mago {
 		this.diam = diam;
 		this.color = Color.BLUE;
 		this.velocidad = 3;
+		this.vida = 100;
 //		this.imagenMago = Herramientas.cargarImagen("2.jpg");
 	}
 	
@@ -81,5 +83,10 @@ public class Mago {
 	public double getY() {
 		return this.y;
 	}
+	
+	public double getDiam() {
+		return this.diam; 
+	}
+	
 }
 

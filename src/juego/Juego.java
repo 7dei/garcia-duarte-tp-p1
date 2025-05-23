@@ -13,12 +13,14 @@ public class Juego extends InterfaceJuego {
 	private Entorno entorno;
 	//meto en private las clases que voy a utilizar
 	
+	private Murcielago murcielago;
 	private Pantalla pantalla;
 	private Mago mago;
 	private Piedra[] piedras;
 	private Murcielago[] murcielagos;
 	private int murcielagosVivos = 0;
 	private int murcielagosCreados = 0;
+	private int vidaMago = 100;
 	
 	private ArrayList <Hechizos> hechizos= new ArrayList<>(); //creamos una lista dinamica la cual es usada para contar todos los hechizos que fueron utilizados
 	private Boton botonDisparo;
@@ -113,21 +115,34 @@ public class Juego extends InterfaceJuego {
 			}
 //condicion que en caso de ser true, indica que el jugador cumplio los objetivos, es decir, gano.
 // (Por ahora es provisional esto, mas adelante deberia de imprimir un menu que indique la victoria)
+							
+			pantalla.dibujarPantalla(entorno);
+			mago.dibujarMago(entorno);
+
+			for (int i = 0; i < murcielagos.length; i++) {
+				Murcielago m = murcielagos[i];
+				if (m != null) {
+					m.dibujarMurcielago(entorno);
+					m.seguir(mago);
+					if (m.colisionaConMago(mago)) {
+						vidaMago-=10;
+						murcielagos[i] = null;
+						murcielagosVivos -=1;
+						System.out.println(vidaMago);
+					}
+				}
+			}
+			
+// pantallas de victoria y derrota respectivamente	
+						
+			if (vidaMago <= 0) {
+				System.out.println("Usted perdio");
+				System.exit(0);
+			}
 			
 			if (murcielagosVivos == 0 && murcielagosCreados == murcielagos.length) {
 				System.out.println("GANASTE!");
 				System.exit(0);
-			}
-			
-			
-			pantalla.dibujarPantalla(entorno);
-			mago.dibujarMago(entorno);
-
-			for (Murcielago m : murcielagos) {
-				if (m != null) {
-					m.dibujarMurcielago(entorno);
-					m.seguir(mago);
-				}
 			}
 
 			pantalla.dibujarPoderes(entorno);

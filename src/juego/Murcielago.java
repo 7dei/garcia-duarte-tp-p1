@@ -9,6 +9,7 @@ public class Murcielago {
 	private double diam;
 	private double velocidad;
 	private Color color;
+	private double radioMago;
 	
 	
 	
@@ -23,6 +24,21 @@ public class Murcielago {
 	public void dibujarMurcielago(Entorno e) {
 		e.dibujarCirculo(x, y, diam, color);
 	}
+	
+	public boolean colisionaConMago(Mago mago) {
+		double distX = x - mago.getX();
+		double distY = y - mago.getY();
+		double distancia = Math.sqrt(distX * distX + distY * distY)  ; 
+		//utilizo sqrt para hacer la raiz, es decir teorema de pitagoras, asegurandome la distancia entre ambos.
+		
+		double radioMurcielago = diam / 2;
+	    double radioMago = mago.getDiam() / 2;
+	    //consigo el diametro de ambos, es decir el circulo completo, y luego lo divido por dos para conseguir el radio
+	    //(distancia entre el centro y el borde)
+	    
+	    return distancia < (radioMurcielago + radioMago);
+	    }
+	    	
 	
 	public void seguir(Mago mago) {
 		//se recibe el mago y con su posicion se compara a la del murcielago, si esta es diferencia se aumenta
