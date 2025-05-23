@@ -2,7 +2,8 @@ package juego;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.Random;
+
+import java.util.ArrayList;
 
 import entorno.Entorno;
 import entorno.InterfaceJuego;
@@ -11,11 +12,17 @@ public class Juego extends InterfaceJuego {
 	// El objeto Entorno que controla el tiempo y otros
 	private Entorno entorno;
 	//meto en private las clases que voy a utilizar
+	
 	private Pantalla pantalla;
 	private Mago mago;
 	private Piedra[] piedras;
 	private Murcielago[] murcielagos;
+	private int murcielagosVivos = 0;
 	private int murcielagosCreados = 0;
+	
+	private ArrayList <Hechizos> hechizos= new ArrayList<>(); //creamos una lista dinamica la cual es usada para contar todos los hechizos que fueron utilizados
+	private Boton botonDisparo;
+	
 	
 	private String[] opciones = {"Jugar", "Salir"};
     private int opcionSeleccionada = 0;
@@ -44,10 +51,10 @@ public class Juego extends InterfaceJuego {
 //como su limite es 50, si el contador de murcielagos creados llega a 50 termina (Ya que el largo de murcielagos es 50)
 	public void crearMurcielagos() {
 		Point[] zonasSpawn = new Point[] {
-			new Point(-50, 0),  // izquierda arriba
-			new Point(-50, 400), // izquierda abajo
+			new Point(-50, 0), // izquierda arriba
+			new Point(-50, 400), //izquierda abajo
 			new Point(150, -50), //arriba izquierda
-			new Point(450, -50), //arriba medio
+			new Point(450, -50), //arriba izquierda
 			new Point(700, -50), // arriba derecha
 			new Point(150, 650), // abajo izquierda
 			new Point(450, 650), // abajo medio
@@ -63,6 +70,7 @@ public class Juego extends InterfaceJuego {
 			Point spawn = zonasSpawn[murcielagosCreados % zonasSpawn.length];
 			murcielagos[murcielagosCreados] = new Murcielago(spawn.x, spawn.y, 10);
 			murcielagosCreados++;
+			murcielagosVivos++;
 		}
 	}
 
@@ -87,8 +95,8 @@ public class Juego extends InterfaceJuego {
 			if (entorno.sePresiono(entorno.TECLA_ENTER)) {
 				if (opcionSeleccionada == 0) {
 					System.out.println("Elegiste Jugar");
-					estado = estadoJuego.En_Juego;
-					crearMurcielagos(); // 🔁 Podés llamarlo al iniciar
+					estado = estadoJuego.En_Juego; 
+					crearMurcielagos();
 				} else if (opcionSeleccionada == 1) {
 					System.out.println("Elegiste Salir");
 					System.exit(0);
@@ -96,6 +104,22 @@ public class Juego extends InterfaceJuego {
 			}
 
 		} else if (estado == estadoJuego.En_Juego) {
+			
+//lo agregue para que cree 10 murcielagos mientras no haya murcielagos vivos, y 
+//el contador general de murcielagos creados hasta ahora sea menor a 50 (El largo de murcielagos pedido para ganar)			
+			
+			if (murcielagosVivos == 0 && murcielagosCreados < murcielagos.length) { 
+				crearMurcielagos();
+			}
+//condicion que en caso de ser true, indica que el jugador cumplio los objetivos, es decir, gano.
+// (Por ahora es provisional esto, mas adelante deberia de imprimir un menu que indique la victoria)
+			
+			if (murcielagosVivos == 0 && murcielagosCreados == murcielagos.length) {
+				System.out.println("GANASTE!");
+				System.exit(0);
+			}
+			
+			
 			pantalla.dibujarPantalla(entorno);
 			mago.dibujarMago(entorno);
 
@@ -107,7 +131,36 @@ public class Juego extends InterfaceJuego {
 			}
 
 			pantalla.dibujarPoderes(entorno);
+			
+			if (entorno.mousePresente() && entorno.sePresionoBoton(1)) {
+		        double dx = entorno.mouseX() - mago.getX();
+		        double dy = entorno.mouseY() - mago.getY();
+		        double angulo = Math.atan2(dy, dx);
+		        hechizos.add(new Hechizos(mago.getX(), mago.getY(), angulo));
+		    }
 
+			for (int k = 0; k < hechizos.size(); k++) {
+			    Hechizos h = hechizos.get(k);
+			    h.mover();
+			    h.dibujar(entorno);
+
+			    for (int j = 0; j < murcielagos.length; j++) {
+			        if (murcielagos[j] != null && h.colisionaCon(murcielagos[j])) {
+			            // Eliminar murciélago (setear en null)
+			            murcielagos[j] = murcielagos[murcielagosVivos - 1];
+			            murcielagos[murcielagosVivos - 1] = null;
+			            murcielagosVivos--;
+
+			            // Eliminar hechizo
+			            hechizos.remove(k);
+			            k--; // retroceder índice porque eliminaste un hechizo
+			            break;
+			         
+			        }
+			    }
+			}
+			
+	    
 			if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
 				mago.moverIzquierda(piedras);
 			}
