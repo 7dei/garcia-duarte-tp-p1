@@ -33,7 +33,25 @@ public class Pantalla {
 	    // Zona de menú (1/4 der) → centro en 600 + (200 / 2) = 700
 	    entorno.dibujarImagen(fondoPoderes, anchoJuego + (anchoPoderes*2), altoJuego / 2, 0);
 	}
-
+	
+	
+	public void dibujarDerrota(Entorno entorno) {
+		entorno.dibujarRectangulo(350, 300, 900, 600, 0, Color.BLACK);
+		entorno.cambiarFont("Arial bold", 60, Color.RED);
+		entorno.escribirTexto("PERDISTE", 240, 250);
+		entorno.cambiarFont("Arial", 30, Color.WHITE);
+		entorno.escribirTexto("Gondolf fue eliminado por los murcielagos :(", 110, 340);
+	}
+	
+	public void dibujarVictoria(Entorno entorno) {
+		entorno.dibujarRectangulo(350, 300, 900, 600, 0, Color.BLACK);
+		entorno.cambiarFont("Arial bold", 60, Color.GREEN);
+		entorno.escribirTexto("GANASTE", 240, 250);
+		entorno.cambiarFont("Arial", 30, Color.WHITE);
+		entorno.escribirTexto("Gondolf elimino a todos los murcielagos!", 140, 340);
+	}
+	
+	
 	
 	
 	public double getX() {

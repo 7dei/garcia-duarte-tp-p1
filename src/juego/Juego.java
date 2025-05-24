@@ -49,6 +49,16 @@ public class Juego extends InterfaceJuego {
 
 		this.entorno.iniciar();
 	}
+	
+//este metodo se encarga de mostrar la vida restante del mago en el lado derecho de la pantalla.
+
+	public void mostrarVida() {
+		entorno.cambiarFont("Cambria bold", 35, Color.WHITE);
+		entorno.escribirTexto("Vida: " + vidaMago, 624, 150);
+		
+	}
+	
+
 //este metodo se encarga de crear de a 10 murcielagos nuevos y agregarlos al arreglo murcielagos,
 //como su limite es 50, si el contador de murcielagos creados llega a 50 termina (Ya que el largo de murcielagos es 50)
 	public void crearMurcielagos() {
@@ -75,8 +85,12 @@ public class Juego extends InterfaceJuego {
 			murcielagosVivos++;
 		}
 	}
+	
 
 	public void tick() {
+		
+		
+		
 		if (estado == estadoJuego.Menu_Principal) {
 			entorno.colorFondo(Color.BLACK);
 			entorno.cambiarFont("Arial bold", 60, Color.WHITE);
@@ -128,24 +142,16 @@ public class Juego extends InterfaceJuego {
 						vidaMago-=10;
 						murcielagos[i] = null;
 						murcielagosVivos -=1;
-						System.out.println(vidaMago);
 					}
 				}
 			}
 			
-// pantallas de victoria y derrota respectivamente	
-						
-			if (vidaMago <= 0) {
-				System.out.println("Usted perdio");
-				System.exit(0);
-			}
 			
-			if (murcielagosVivos == 0 && murcielagosCreados == murcielagos.length) {
-				System.out.println("GANASTE!");
-				System.exit(0);
+// recorre el arreglo de piedras, donde spawnea las 6 en el mapa			
+			for (int i = 0; i < piedras.length; i++) {
+				piedras[i].dibujarPiedra(entorno);
 			}
 
-			pantalla.dibujarPoderes(entorno);
 			
 			if (entorno.mousePresente() && entorno.sePresionoBoton(1)) {
 		        double dx = entorno.mouseX() - mago.getX();
@@ -172,9 +178,12 @@ public class Juego extends InterfaceJuego {
 			            break;
 			         
 			        }
-			    }
+			    }			   
 			}
 			
+			pantalla.dibujarPoderes(entorno);
+			
+			mostrarVida();
 	    
 			if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
 				mago.moverIzquierda(piedras);
@@ -191,12 +200,19 @@ public class Juego extends InterfaceJuego {
 			if (entorno.estaPresionada(entorno.TECLA_ESCAPE)) {
 				System.exit(0);
 			}
-
-			for (int i = 0; i < piedras.length; i++) {
-				piedras[i].dibujarPiedra(entorno);
+				
+			// pantallas de victoria y derrota respectivamente	
+				
+			if (vidaMago <= 0) {
+				pantalla.dibujarDerrota(entorno);
+			}
+				
+			if (murcielagosVivos == 0 && murcielagosCreados == murcielagos.length) {
+				pantalla.dibujarVictoria(entorno);
+				}		
 			}
 		}
-	}
+
 
 	public static void main(String[] args) {
 		Juego juego = new Juego();
