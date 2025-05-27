@@ -26,6 +26,6 @@ public void dibujar (Entorno entorno) {
 public boolean colisionaCon (Murcielago m) { //devuelve true o false
 	double dx = this.x - m.getX(); //si el hechizo esta en la misma posicion que el murcielago en la posicion X.
 	double dy = this.y - m.getY(); //si el hechizo esta en la misma posicion que el murcielago en la posicion Y.
-	return Math.sqrt(dx * dx + dy * dy) < 10; //Aplicamos pitagoras para saber si el hechizo colisiono con el murcielago. 10 es la distancia maxima que puede recorrer el hechizo
+	return Math.sqrt(dx * dx + dy * dy) < 5; //Aplicamos pitagoras para saber si el hechizo colisiono con el murcielago
 }
 }

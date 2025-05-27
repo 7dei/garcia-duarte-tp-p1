@@ -21,7 +21,7 @@ public class Mago {
 		this.y = y;
 		this.x = x;
 		this.diam = diam;
-		this.color = Color.BLUE;
+		this.color = Color.CYAN;
 		this.velocidad = 3;
 		this.vida = 100;
 //		this.imagenMago = Herramientas.cargarImagen("2.jpg");

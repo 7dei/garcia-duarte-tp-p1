@@ -21,11 +21,12 @@ public class Juego extends InterfaceJuego {
 	private int murcielagosVivos = 0;
 	private int murcielagosCreados = 0;
 	private int vidaMago = 100;
+	private int manaMago = 100;
+	private int contadorTicks = 0;
+
 	
 	private ArrayList <Hechizos> hechizos= new ArrayList<>(); //creamos una lista dinamica la cual es usada para contar todos los hechizos que fueron utilizados
-	private Boton botonDisparo;
-	
-	
+	private Boton boton;
 	private String[] opciones = {"Jugar", "Salir"};
     private int opcionSeleccionada = 0;
     private enum estadoJuego {Menu_Principal, En_Juego};
@@ -37,6 +38,7 @@ public class Juego extends InterfaceJuego {
 		
 		this.mago = new Mago(300, 300, 30);
 		this.murcielagos = new Murcielago[50];
+		boton = new Boton(650, 400);
 
 		// arreglo de piedras
 		this.piedras = new Piedra[6];
@@ -53,9 +55,13 @@ public class Juego extends InterfaceJuego {
 //este metodo se encarga de mostrar la vida restante del mago en el lado derecho de la pantalla.
 
 	public void mostrarVida() {
-		entorno.cambiarFont("Cambria bold", 35, Color.WHITE);
+		entorno.cambiarFont("Cambria bold", 35, Color.RED);
 		entorno.escribirTexto("Vida: " + vidaMago, 624, 150);
 		
+	}
+	public void mostrarMana() {
+		entorno.cambiarFont("Cambria bold", 35, Color.BLUE);
+		entorno.escribirTexto("Mana: " + manaMago, 624, 280);
 	}
 	
 
@@ -88,8 +94,8 @@ public class Juego extends InterfaceJuego {
 	
 
 	public void tick() {
-		
-		
+
+		contadorTicks++;	
 		
 		if (estado == estadoJuego.Menu_Principal) {
 			entorno.colorFondo(Color.BLACK);
@@ -118,8 +124,11 @@ public class Juego extends InterfaceJuego {
 					System.exit(0);
 				}
 			}
-
-		} else if (estado == estadoJuego.En_Juego) {
+		}
+		else if (estado == estadoJuego.En_Juego) {
+			if (contadorTicks % 5 == 0 && manaMago<100) { //cada cierta cantidad de tiempo se regenera 1 de mana
+				manaMago++;
+		}
 			
 //lo agregue para que cree 10 murcielagos mientras no haya murcielagos vivos, y 
 //el contador general de murcielagos creados hasta ahora sea menor a 50 (El largo de murcielagos pedido para ganar)			
@@ -151,14 +160,17 @@ public class Juego extends InterfaceJuego {
 			for (int i = 0; i < piedras.length; i++) {
 				piedras[i].dibujarPiedra(entorno);
 			}
-
 			
-			if (entorno.mousePresente() && entorno.sePresionoBoton(1)) {
-		        double dx = entorno.mouseX() - mago.getX();
-		        double dy = entorno.mouseY() - mago.getY();
-		        double angulo = Math.atan2(dy, dx);
-		        hechizos.add(new Hechizos(mago.getX(), mago.getY(), angulo));
-		    }
+			if (boton.estaActivo() && entorno.mousePresente() && entorno.sePresionoBoton(1)) { //si el boton esta activo, dispara 1 hechizo 
+				if (manaMago >= 10 ) { //si el mago tiene mas o de 10 de mana, se le resta 10. Si tiene menos de 10 de mana no podra lanzar el hechizo
+					manaMago= manaMago - 10;
+					double dx = entorno.mouseX() - mago.getX();
+					double dy = entorno.mouseY() - mago.getY();
+					double angulo = Math.atan2(dy, dx);
+					hechizos.add(new Hechizos(mago.getX(), mago.getY(), angulo));
+					boton.desactivar(); //una vez disparado el hechizo el boton se desactivara
+				}
+			}
 
 			for (int k = 0; k < hechizos.size(); k++) {
 			    Hechizos h = hechizos.get(k);
@@ -182,19 +194,25 @@ public class Juego extends InterfaceJuego {
 			}
 			
 			pantalla.dibujarPoderes(entorno);
+			boton.dibujar(entorno);
+			boton.estaSobreMouse(entorno);
+			
+			mostrarMana();
+			entorno.dibujarRectangulo(650, 300, manaMago * 0.8, 20, 0, Color.BLUE);
 			
 			mostrarVida();
+			entorno.dibujarRectangulo(650, 200, vidaMago * 0.8, 20, 0, Color.RED);
 	    
-			if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
+			if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA) || entorno.estaPresionada('a')) {
 				mago.moverIzquierda(piedras);
 			}
-			if (entorno.estaPresionada(entorno.TECLA_DERECHA)) {
+			if (entorno.estaPresionada(entorno.TECLA_DERECHA) || entorno.estaPresionada('d')) {
 				mago.moverDerecha(piedras);
 			}
-			if (entorno.estaPresionada(entorno.TECLA_ARRIBA)) {
+			if (entorno.estaPresionada(entorno.TECLA_ARRIBA) || entorno.estaPresionada('w')) {
 				mago.moverArriba(piedras);
 			}
-			if (entorno.estaPresionada(entorno.TECLA_ABAJO)) {
+			if (entorno.estaPresionada(entorno.TECLA_ABAJO) || entorno.estaPresionada('s')) {
 				mago.moverAbajo(piedras);
 			}
 			if (entorno.estaPresionada(entorno.TECLA_ESCAPE)) {
