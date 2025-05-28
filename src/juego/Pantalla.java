@@ -7,9 +7,6 @@ import entorno.Herramientas;
 
 //se va a encargar de dividir las partes de la pantalla, 1/4 para los poderes y los otros 3/4 para la zona de jugabilidad
 public class Pantalla {
-	
-	private double x;
-	private double y;
 	//los anchos estan asignado al reves para que no generen error
 	private double anchoJuego = 600;
 	private double altoJuego = 600;
@@ -19,8 +16,8 @@ public class Pantalla {
 	
 //Constructor que me permita cargar la imagen	
 	public Pantalla() {
-		this.fondoJuego = Herramientas.cargarImagen("bloque.png");
-		this.fondoPoderes = Herramientas.cargarImagen("bloquem.png");
+		this.fondoJuego = Herramientas.cargarImagen("Fondo.png");
+		this.fondoPoderes = Herramientas.cargarImagen("PantallaPoder.png");
 	}
 	
 	
@@ -31,7 +28,7 @@ public class Pantalla {
 
 	public void dibujarPoderes(Entorno entorno) {
 	    // Zona de menú (1/4 der) → centro en 600 + (200 / 2) = 700
-	    entorno.dibujarImagen(fondoPoderes, anchoJuego + (anchoPoderes*2), altoJuego / 2, 0);
+	    entorno.dibujarImagen(fondoPoderes, anchoJuego + (anchoPoderes * 1.5), altoJuego / 2, 0);
 	}
 	
 	
@@ -53,15 +50,7 @@ public class Pantalla {
 	
 	
 	
-	
-	public double getX() {
-		return x;
-	}
-	
-	public double getY() {
-		return y;
-	}
-	
+		
 	public double getAnchoJuego() {
 		return anchoJuego;
 	}

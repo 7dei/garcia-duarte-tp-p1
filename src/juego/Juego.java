@@ -35,7 +35,7 @@ public class Juego extends InterfaceJuego {
 	public Juego() {
 		this.entorno = new Entorno(this, "Gondolf un nuevo Mago - Grupo N10 - Garcia - Duarte - Apellido3", 800, 600);
 		
-		this.mago = new Mago(300, 300, 30);
+		this.mago = new Mago(300, 300, 0);
 		this.murcielagos = new Murcielago[50];
 
 		// arreglo de piedras
@@ -132,7 +132,12 @@ public class Juego extends InterfaceJuego {
 							
 			pantalla.dibujarPantalla(entorno);
 			mago.dibujarMago(entorno);
-
+// recorre el arreglo de piedras, donde spawnea las 6 en el mapa			
+			
+			for (int i = 0; i < piedras.length; i++) {
+				piedras[i].dibujarPiedra(entorno);
+				}			
+			
 			for (int i = 0; i < murcielagos.length; i++) {
 				Murcielago m = murcielagos[i];
 				if (m != null) {
@@ -146,12 +151,6 @@ public class Juego extends InterfaceJuego {
 				}
 			}
 			
-			
-// recorre el arreglo de piedras, donde spawnea las 6 en el mapa			
-			for (int i = 0; i < piedras.length; i++) {
-				piedras[i].dibujarPiedra(entorno);
-			}
-
 			
 			if (entorno.mousePresente() && entorno.sePresionoBoton(1)) {
 		        double dx = entorno.mouseX() - mago.getX();
@@ -180,12 +179,14 @@ public class Juego extends InterfaceJuego {
 			        }
 			    }			   
 			}
-			
+//coloque aca la pantalla de poderes para que no se vea nada que deba pasar por abajo			
 			pantalla.dibujarPoderes(entorno);
+
 			
+// dibuja la vida en la pantalla
 			mostrarVida();
 	    
-			if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA)) {
+			if (entorno.estaPresionada(entorno.TECLA_IZQUIERDA) ) {
 				mago.moverIzquierda(piedras);
 			}
 			if (entorno.estaPresionada(entorno.TECLA_DERECHA)) {

@@ -1,29 +1,25 @@
 package juego;
 
-import java.awt.Color;
-
+import java.awt.Image;
 import entorno.Entorno;
+import entorno.Herramientas;
 
 public class Piedra {
 	private double x;
 	private double y;
-//	private double ancho;
-//	private double alto;
+	private Image imagenPiedra;
 	private double diametro;
-	private Color color;	
 
 
 	public Piedra(double x, double y, double diametro) {
 		this.x = x;
 		this.y = y;
 		this.diametro = diametro;
-//		this.ancho = ancho;
-//		this.alto = alto;
-		this.color = Color.GRAY; 
+		this.imagenPiedra = Herramientas.cargarImagen("Piedra.png").getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 	}
 	
 	public void dibujarPiedra(Entorno e) {
-		e.dibujarCirculo(x, y, diametro, color);
+		e.dibujarImagen(imagenPiedra, x, y, 0);
 	}
 	
 	public double getX() {

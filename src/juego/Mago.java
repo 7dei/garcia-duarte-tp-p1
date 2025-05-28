@@ -1,9 +1,8 @@
 package juego;
 
-import java.awt.Color;
-//import java.awt.Image;
+import java.awt.Image;
 import entorno.Entorno;
-//import entorno.Herramientas;
+import entorno.Herramientas;
 
 public class Mago {
 	
@@ -11,9 +10,7 @@ public class Mago {
 	private double y;
 	private double diam;
 	private int velocidad;
-	private Color color;
-	private int vida;
-//	private Image imagenMago;
+	private Image imagenGondolf;
 	
 	
 	
@@ -21,45 +18,45 @@ public class Mago {
 		this.y = y;
 		this.x = x;
 		this.diam = diam;
-		this.color = Color.BLUE;
 		this.velocidad = 3;
-		this.vida = 100;
-//		this.imagenMago = Herramientas.cargarImagen("2.jpg");
+		// agregue el getScaledInstance ya que me permite modificar la escala para que no se vea grande.
+		this.imagenGondolf = Herramientas.cargarImagen("Gondolf.png").getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+		
 	}
 	
 		// TODO Auto-generated constructor stub
 // se encarga de aumentar o restas un velocidad a la direccion, es decir el movimiento cuando sea presionada una tecla.
 	public void moverIzquierda(Piedra [] piedras) {
 		double nuevoX = x - velocidad;
-	    if (nuevoX - diam / 2 >= 0 && !colisionPiedra(nuevoX, y, piedras)) { //el !colisionpiedra lo usamos ya que si no es true el jugador puede avanzar.
+	    if (nuevoX - diam / 2 >= 22 && !colisionPiedra(nuevoX, y, piedras)) { //el !colisionpiedra lo usamos ya que si no es true el jugador puede avanzar.
 	        x = nuevoX;
 	    }
 	}
 	
 	public void moverDerecha(Piedra [] piedras) {
 		double nuevoX = x + velocidad;
-	    if (nuevoX + diam / 2 <= 600 && !colisionPiedra(nuevoX, y, piedras)) {
+	    if (nuevoX + diam / 2 <= 578 && !colisionPiedra(nuevoX, y, piedras)) {
 	        x = nuevoX;
 	    }
 	}
 	
 	public void moverArriba(Piedra [] piedras) {
 		double nuevoY = y - velocidad;
-	    if (nuevoY - diam / 2 >= 0 && !colisionPiedra(x, nuevoY, piedras)) {
+	    if (nuevoY - diam / 2 >= 23 && !colisionPiedra(x, nuevoY, piedras)) {
 	        y = nuevoY;
 	    }
 	}
 	
 	public void moverAbajo(Piedra [] piedras) {
 		double nuevoY = y + velocidad;
-	    if (nuevoY + diam / 2 <= 600 && !colisionPiedra(x, nuevoY, piedras)) {
+	    if (nuevoY + diam / 2 <= 579 && !colisionPiedra(x, nuevoY, piedras)) {
 	        y = nuevoY;
 	    }
 	}
 	
 // se encarga de dibujar el mago ubicado en el centro de la zona jugable.
 	public void dibujarMago(Entorno e) {
-		e.dibujarCirculo(x, y, diam, color);
+		e.dibujarImagen(imagenGondolf, x, y, diam);
 		}
 	
 // se encarga de verificar si la distancia entre el radio del mago y el radio de la piedra es minima, si esto

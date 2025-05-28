@@ -2,6 +2,9 @@ package juego;
 
 import java.awt.Color;
 import entorno.Entorno;
+import entorno.Herramientas;
+
+import java.awt.Image;
 
 public class Murcielago {
 	private double x;
@@ -10,6 +13,7 @@ public class Murcielago {
 	private double velocidad;
 	private Color color;
 	private double radioMago;
+	private Image imagenMurcielago;
 	
 	
 	
@@ -19,10 +23,11 @@ public class Murcielago {
 		this.diam = diam;
 		this.color = Color.RED;
 		this.velocidad = 1.5;
+		this.imagenMurcielago = Herramientas.cargarImagen("Murcielago.png").getScaledInstance(60, 60, diam);
 	}
 	
 	public void dibujarMurcielago(Entorno e) {
-		e.dibujarCirculo(x, y, diam, color);
+		e.dibujarImagen(imagenMurcielago, x, y, 0);
 	}
 	
 	public boolean colisionaConMago(Mago mago) {
