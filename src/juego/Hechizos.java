@@ -9,14 +9,16 @@ public class Hechizos {
 	double x;
 	double y;
 	double velocidad = 5;
+	private int diam;
 	double angulo; //Pasamos los parametros de la clase Hechizos
 	private Image imagenPoder;
 
 
-public Hechizos (double x, double y, double angulo) {
+public Hechizos (double x, double y, double angulo, int diam) {
 	this.x=x;
 	this.y=y;
 	this.angulo = angulo;
+	this.diam = diam;
 	this.imagenPoder = Herramientas.cargarImagen("Poder.png").getScaledInstance(20, 20, 0);
 	
 }
@@ -30,6 +32,6 @@ public void dibujar (Entorno entorno) {
 public boolean colisionaCon (Murcielago m) { //devuelve true o false
 	double dx = this.x - m.getX(); //si el hechizo esta en la misma posicion que el murcielago en la posicion X.
 	double dy = this.y - m.getY(); //si el hechizo esta en la misma posicion que el murcielago en la posicion Y.
-	return Math.sqrt(dx * dx + dy * dy) < 10; //Aplicamos pitagoras para saber si el hechizo colisiono con el murcielago. 10 es la distancia maxima que puede recorrer el hechizo
+	return Math.sqrt(dx * dx + dy * dy) < 15; //Aplicamos pitagoras para saber si el hechizo colisiono con el murcielago
 }
 }

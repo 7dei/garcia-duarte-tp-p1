@@ -13,7 +13,7 @@ public class Mago {
 	private Image imagenGondolf;
 	
 	
-	
+// constructor	
 	public Mago(double x, double y, int diam) {
 		this.y = y;
 		this.x = x;
@@ -24,39 +24,39 @@ public class Mago {
 		
 	}
 	
-		// TODO Auto-generated constructor stub
-// se encarga de aumentar o restas un velocidad a la direccion, es decir el movimiento cuando sea presionada una tecla.
+// se encarga de aumentar o restar un valor de velocidad a la direccion, es decir el movimiento 
+// cuando sea presionada la tecla.
 	public void moverIzquierda(Piedra [] piedras) {
 		double nuevoX = x - velocidad;
-	    if (nuevoX - diam / 2 >= 22 && !colisionPiedra(nuevoX, y, piedras)) { //el !colisionpiedra lo usamos ya que si no es true el jugador puede avanzar.
+	    if (nuevoX - diam / 2 >= 15 && !colisionPiedra(nuevoX, y, piedras)) { //el !colisionpiedra lo usamos ya que si no es true el jugador puede avanzar.
 	        x = nuevoX;
 	    }
 	}
 	
 	public void moverDerecha(Piedra [] piedras) {
 		double nuevoX = x + velocidad;
-	    if (nuevoX + diam / 2 <= 578 && !colisionPiedra(nuevoX, y, piedras)) {
+	    if (nuevoX + diam / 2 <= 585 && !colisionPiedra(nuevoX, y, piedras)) {
 	        x = nuevoX;
 	    }
 	}
 	
 	public void moverArriba(Piedra [] piedras) {
 		double nuevoY = y - velocidad;
-	    if (nuevoY - diam / 2 >= 23 && !colisionPiedra(x, nuevoY, piedras)) {
+	    if (nuevoY - diam / 2 >= 20 && !colisionPiedra(x, nuevoY, piedras)) {
 	        y = nuevoY;
 	    }
 	}
 	
 	public void moverAbajo(Piedra [] piedras) {
 		double nuevoY = y + velocidad;
-	    if (nuevoY + diam / 2 <= 579 && !colisionPiedra(x, nuevoY, piedras)) {
+	    if (nuevoY + diam / 2 <= 585 && !colisionPiedra(x, nuevoY, piedras)) {
 	        y = nuevoY;
 	    }
 	}
 	
 // se encarga de dibujar el mago ubicado en el centro de la zona jugable.
 	public void dibujarMago(Entorno e) {
-		e.dibujarImagen(imagenGondolf, x, y, diam);
+		e.dibujarImagen(imagenGondolf, x, y, 0);
 		}
 	
 // se encarga de verificar si la distancia entre el radio del mago y el radio de la piedra es minima, si esto
