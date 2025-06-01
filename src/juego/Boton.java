@@ -14,7 +14,7 @@ private double tamaño2;
 private Image imagenActiva;
 private Image imagenNormal;
 
-
+//constructor
 	public Boton (double x,double y) {
 		this.x=x;
 		this.y=y;
@@ -26,7 +26,8 @@ private Image imagenNormal;
 		this.imagenActiva= Herramientas.cargarImagen("hechizo1.png");
 		this.imagenNormal= Herramientas.cargarImagen("hechizo2.png");
 	}
-	
+
+//Dibuja el boton en el entorno
 	public void dibujar(Entorno entorno) {
 		if (activo) {
 			entorno.dibujarImagen(imagenActiva, x, y, 0, tamaño1);
@@ -36,17 +37,19 @@ private Image imagenNormal;
 		}
 	}
 
-public void estaSobreMouse(Entorno entorno) { //esta funcion verifica si el mouse esta dentro del area del boton
+//verifica que las coordenadas x e y del mouse esten sobre las coordenadas del boton y si fue presionado el boton del click izquierdo del mouse. Si esto se verifica se activa y se desactiva botonBomba.
+public void estaSobreMouse(Entorno entorno, Boton2 botonBomba) {
     if (entorno.mousePresente() && entorno.sePresionoBoton(1)) {
     	int mouseX = entorno.mouseX();
     	int mouseY = entorno.mouseY();
     	if (mouseX >= x - ancho / 2 && mouseX <= x + ancho /2 && mouseY >= y - alto / 2 && mouseY <= y + alto /2) {
     			this.activo = true;
+    			botonBomba.desactivar();
     	}
     }
 }
 
-
+//verifica el estado en el cual se encuentra el boton
 public boolean estaActivo() {
 	return this.activo;
 	}

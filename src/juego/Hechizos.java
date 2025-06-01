@@ -13,7 +13,7 @@ public class Hechizos {
 	double angulo; //Pasamos los parametros de la clase Hechizos
 	private Image imagenPoder;
 
-
+//constructor
 public Hechizos (double x, double y, double angulo, int diam) {
 	this.x=x;
 	this.y=y;
@@ -22,16 +22,22 @@ public Hechizos (double x, double y, double angulo, int diam) {
 	this.imagenPoder = Herramientas.cargarImagen("Poder.png").getScaledInstance(20, 20, 0);
 	
 }
+
+//mueve el hechizo en la cordenada x e y.
 public void mover() {
-	x+= Math.cos(angulo) * velocidad; //velocidad en la que se mueve el mouse desde la coordenada x
-	y+= Math.sin(angulo) * velocidad; //velocidad en la que se mueve el mouse desde la coordenada y
+	x+= Math.cos(angulo) * velocidad;
+	y+= Math.sin(angulo) * velocidad;
 }
+
+//dibujo del hechizo
 public void dibujar (Entorno entorno) {
-	entorno.dibujarImagen(imagenPoder, x, y, angulo, 2); //dibujo del hechizo
+	entorno.dibujarImagen(imagenPoder, x, y, angulo, 2);
 }
-public boolean colisionaCon (Murcielago m) { //devuelve true o false
-	double dx = this.x - m.getX(); //si el hechizo esta en la misma posicion que el murcielago en la posicion X.
-	double dy = this.y - m.getY(); //si el hechizo esta en la misma posicion que el murcielago en la posicion Y.
+
+//verifica la posicion x e y entre el hechizo y el murcielago
+public boolean colisionaCon (Murcielago m) {
+	double dx = this.x - m.getX();
+	double dy = this.y - m.getY();
 	return Math.sqrt(dx * dx + dy * dy) < 15; //Aplicamos pitagoras para saber si el hechizo colisiono con el murcielago
 }
 }
