@@ -27,7 +27,7 @@ public Boton2 (double x,double y) {
 	this.tamaño3 = 0.45;
 	this.tamaño4 = 0.45;
 	this.imagenActiva= Herramientas.cargarImagen("botonbomba2.png");
-	this.imagenNormal= Herramientas.cargarImagen("botonbomba2.png");
+	this.imagenNormal= Herramientas.cargarImagen("botonbomba1.png");
 	}
 	
 //Dibuja el boton en el entorno
@@ -36,7 +36,7 @@ public Boton2 (double x,double y) {
 			entorno.dibujarImagen(imagenActiva, x, y, 0, tamaño3);
 		}
 		else {
-			entorno.dibujarImagen(imagenNormal, x, y, 0, tamaño4);
+			entorno.dibujarImagen(imagenNormal, x, y, 0, 0.23);
 		}
 	}
 

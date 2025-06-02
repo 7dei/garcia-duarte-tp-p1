@@ -308,6 +308,7 @@ public class Juego extends InterfaceJuego {
 			//victoria	
 			if (vidaMago <= 0) {
 				pantalla.dibujarDerrota(entorno);
+				}
 			}
 			
 			//derrota
@@ -315,7 +316,7 @@ public class Juego extends InterfaceJuego {
 				pantalla.dibujarVictoria(entorno);
 				}
 			}
-		}
+		
 	
 
 	public static void main(String[] args) {

@@ -29,7 +29,7 @@ this.imagenExplosion=Herramientas.cargarImagen("explosion.png");
 //dibuja la explosión en el entorno
 public void dibujar (Entorno entorno) {
 	if (explotada && ticksDesdeExplosion < duracionDeTicks) {
-		entorno.dibujarImagen(imagenExplosion, x, y, 0, 0.7);
+		entorno.dibujarImagen(imagenExplosion, x, y, 0, 0.3);
 	}
 }
 

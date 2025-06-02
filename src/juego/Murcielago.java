@@ -37,7 +37,7 @@ public class Murcielago {
 		double posY = mago.getY() - this.y;
 
 		double distancia = Math.sqrt(posX * posX + posY * posY); //teorema de pitagoras para calcular la distancia
-
+		
 		if (distancia > 1) { // para que no tiemble si ya está muy cerca
 		    this.x += (posX / distancia) * velocidad;
 		    this.y += (posY / distancia) * velocidad;
